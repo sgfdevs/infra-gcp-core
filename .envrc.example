@@ -1,6 +1,1 @@
-# AWS IAM Identity Center profile with access to the existing SGFDEVS state backend.
 export AWS_PROFILE="your-aws-profile-name"
-# Google provider uses local Application Default Credentials, not a service-account key.
-# If Google requires an explicit quota project during bootstrap, use an existing,
-# approved one. Do not point this at the not-yet-created project.
-# export GOOGLE_CLOUD_QUOTA_PROJECT="approved-existing-quota-project-id"

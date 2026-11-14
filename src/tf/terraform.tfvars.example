@@ -1,13 +1,9 @@
-# Replace blanks with approved identifiers before planning. These are not secrets.
 project_id         = ""
 project_name       = ""
 billing_account_id = ""
 
-# Choose one organization_id or folder_id. Use {} only if explicitly approved
-# to create a project with no organization.
 project_parent = {
   organization_id = ""
 }
 
-# Branch allowed to dispatch prepare-release.yml and call android-release.yml.
 method_release_branch = ""

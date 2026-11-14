@@ -1,5 +1,4 @@
 locals {
-  # Verified with GitHub's repository API. Numeric IDs prevent name-reuse attacks.
   method_repository       = "sgfdevs/method_conf_app"
   method_repository_id    = "237699189"
   sgfdevs_owner_id        = "53604170"
@@ -17,8 +16,6 @@ resource "google_service_account" "method_play" {
   depends_on = [google_project_service.api["iam.googleapis.com"]]
 }
 
-# Keep this pool dedicated to Method. Any future provider in this pool must enforce
-# the same workflow restrictions, since IAM principal sets are pool-scoped.
 resource "google_iam_workload_identity_pool" "method_play" {
   project                   = google_project.core.project_id
   workload_identity_pool_id = "method-play"
@@ -35,15 +32,11 @@ resource "google_iam_workload_identity_pool_provider" "method_play_github" {
   display_name                       = "Method GitHub releases"
 
   attribute_mapping = {
-    "google.subject"          = "assertion.sub"
-    "attribute.repository_id" = "assertion.repository_id"
-    # job_workflow_ref is only present for reusable workflows.
+    "google.subject"             = "assertion.sub"
+    "attribute.repository_id"    = "assertion.repository_id"
     "attribute.job_workflow_ref" = "'job_workflow_ref' in assertion ? assertion.job_workflow_ref : assertion.workflow_ref"
   }
 
-  # Direct published-release runs use a tag ref. Reusable workflow runs retain
-  # the caller's event/ref; checking only assertion.workflow_ref would either
-  # reject prepare-release or accidentally authorize all jobs in the caller.
   attribute_condition = <<-CEL
     assertion.repository_owner_id == "${local.sgfdevs_owner_id}" &&
     assertion.repository_id == "${local.method_repository_id}" &&
@@ -66,8 +59,6 @@ resource "google_iam_workload_identity_pool_provider" "method_play_github" {
 
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
-    # No custom audiences. Google requires this provider's canonical resource
-    # name, with or without the https://iam.googleapis.com/ prefix.
   }
 }
 
