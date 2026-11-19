@@ -12,7 +12,7 @@ Provisions SGFDEVS shared GCP foundation resources, including projects, APIs, se
 - `.github/workflows/`: Validation workflow for OpenTofu changes.
 
 ## Run
-Copy `.envrc.example` to `.envrc`. Set the AWS profile and fill in the GCP project ID and billing account ID. Set `TF_VAR_project_parent` to a JSON object with either `organization_id` or `folder_id`, or use `'{}'` for a project without an organization.
+Copy `.envrc.example` to `.envrc` and set the AWS profile and Google Cloud billing account ID. The stack creates `sgfdevs-gcp-core` and trusts manual Play deployments from `main`.
 
 ```bash
 source ./.envrc

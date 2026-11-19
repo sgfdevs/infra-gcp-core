@@ -3,7 +3,7 @@ locals {
   method_repository_id   = "237699189"
   sgfdevs_owner_id       = "53604170"
   method_deploy_workflow = "${local.method_repository}/.github/workflows/play-deploy.yml"
-  method_release_ref     = "refs/heads/${var.method_release_branch}"
+  method_release_ref     = "refs/heads/main"
 }
 
 resource "google_service_account" "method_play" {

@@ -1,8 +1,10 @@
+locals {
+  project_id = "sgfdevs-gcp-core"
+}
+
 resource "google_project" "core" {
-  project_id      = var.project_id
-  name            = var.project_name
-  org_id          = var.project_parent.organization_id
-  folder_id       = var.project_parent.folder_id
+  project_id      = local.project_id
+  name            = "SGF Devs GCP Core"
   billing_account = var.billing_account_id
   deletion_policy = "PREVENT"
 
