@@ -11,6 +11,5 @@ application_default_credentials.json
 tfplan
 tfplan.*
 *.tfvars
-!*.tfvars.example
 *.log
 crash.*

@@ -1,9 +1,0 @@
-project_id         = ""
-project_name       = ""
-billing_account_id = ""
-
-project_parent = {
-  organization_id = ""
-}
-
-method_release_branch = ""

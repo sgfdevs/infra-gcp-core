@@ -12,11 +12,12 @@ Provisions SGFDEVS shared GCP foundation resources, including projects, APIs, se
 - `.github/workflows/`: Validation workflow for OpenTofu changes.
 
 ## Run
-Copy `.envrc.example` to `.envrc` and `src/tf/terraform.tfvars.example` to `src/tf/terraform.tfvars`. Set the AWS profile and fill in the project, parent, billing, and release-branch inputs.
+Copy `.envrc.example` to `.envrc`. Set the AWS profile and fill in the GCP project ID and billing account ID. Set `TF_VAR_project_parent` to a JSON object with either `organization_id` or `folder_id`, or use `'{}'` for a project without an organization.
 
 ```bash
+source ./.envrc
 gcloud auth application-default login
-aws sso login --profile YOUR_AWS_PROFILE
+aws sso login --profile "$AWS_DEFAULT_PROFILE"
 
 make help
 make tf-init
