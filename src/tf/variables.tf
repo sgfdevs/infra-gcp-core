@@ -1,12 +1,6 @@
 variable "gcp_organization_id" {
-  description = "Numeric Google Cloud organization ID that owns the managed projects."
+  description = "Google Cloud organization ID for managed projects."
   type        = string
-  nullable    = false
-
-  validation {
-    condition     = can(regex("^[1-9][0-9]*$", var.gcp_organization_id))
-    error_message = "Use the numeric organization ID without the organizations/ prefix."
-  }
 }
 
 variable "gcp_billing_account_id" {
