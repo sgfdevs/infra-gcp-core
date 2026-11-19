@@ -1,2 +1,5 @@
 export AWS_DEFAULT_PROFILE="your-aws-profile-name"
 export TF_VAR_gcp_billing_account_id=""
+export CLOUDSDK_ACTIVE_CONFIG_NAME="sgfdevs-admin"
+GOOGLE_OAUTH_ACCESS_TOKEN="$(gcloud auth print-access-token)" || return 1
+export GOOGLE_OAUTH_ACCESS_TOKEN
