@@ -1,0 +1,15 @@
+# Local environment and credentials
+.envrc
+gha-creds-*.json
+application_default_credentials.json
+
+# OpenTofu
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+tfplan.*
+*.tfvars
+*.log
+crash.*
