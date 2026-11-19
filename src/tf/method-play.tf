@@ -1,10 +1,9 @@
 locals {
-  method_repository       = "sgfdevs/method_conf_app"
-  method_repository_id    = "237699189"
-  sgfdevs_owner_id        = "53604170"
-  method_android_workflow = "${local.method_repository}/.github/workflows/android-release.yml"
-  method_prepare_workflow = "${local.method_repository}/.github/workflows/prepare-release.yml"
-  method_release_ref      = "refs/heads/${var.method_release_branch}"
+  method_repository      = "sgfdevs/method_conf_app"
+  method_repository_id   = "237699189"
+  sgfdevs_owner_id       = "53604170"
+  method_deploy_workflow = "${local.method_repository}/.github/workflows/play-deploy.yml"
+  method_release_ref     = "refs/heads/${var.method_release_branch}"
 }
 
 resource "google_service_account" "method_play" {
@@ -20,7 +19,7 @@ resource "google_iam_workload_identity_pool" "method_play" {
   project                   = google_project.core.project_id
   workload_identity_pool_id = "method-play"
   display_name              = "Method Play releases"
-  description               = "GitHub OIDC for the Method Android release workflow only."
+  description               = "GitHub OIDC for the manual Method Play deployment workflow only."
 
   depends_on = [google_project_service.api["iam.googleapis.com"]]
 }
@@ -41,20 +40,10 @@ resource "google_iam_workload_identity_pool_provider" "method_play_github" {
     assertion.repository_owner_id == "${local.sgfdevs_owner_id}" &&
     assertion.repository_id == "${local.method_repository_id}" &&
     assertion.repository == "${local.method_repository}" &&
-    (
-      (
-        assertion.event_name == "release" &&
-        assertion.ref.matches("^refs/tags/android/v[0-9]+[.][0-9]+[.][0-9]+[+][1-9][0-9]*$") &&
-        assertion.workflow_ref == "${local.method_android_workflow}@" + assertion.ref &&
-        attribute.job_workflow_ref == assertion.workflow_ref
-      ) ||
-      (
-        assertion.event_name == "workflow_dispatch" &&
-        assertion.ref == ${jsonencode(local.method_release_ref)} &&
-        assertion.workflow_ref == ${jsonencode("${local.method_prepare_workflow}@${local.method_release_ref}")} &&
-        attribute.job_workflow_ref == ${jsonencode("${local.method_android_workflow}@${local.method_release_ref}")}
-      )
-    )
+    assertion.event_name == "workflow_dispatch" &&
+    assertion.ref == ${jsonencode(local.method_release_ref)} &&
+    assertion.workflow_ref == ${jsonencode("${local.method_deploy_workflow}@${local.method_release_ref}")} &&
+    attribute.job_workflow_ref == assertion.workflow_ref
   CEL
 
   oidc {

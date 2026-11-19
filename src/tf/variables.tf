@@ -50,7 +50,7 @@ variable "billing_account_id" {
 }
 
 variable "method_release_branch" {
-  description = "Approved branch for prepare-release.yml to call android-release.yml."
+  description = "Approved branch for manually running play-deploy.yml."
   type        = string
   nullable    = false
 
