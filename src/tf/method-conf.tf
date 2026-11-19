@@ -10,6 +10,7 @@ locals {
 resource "google_project" "method_conf" {
   project_id      = local.method_conf_project_id
   name            = local.method_conf_project_id
+  org_id          = var.gcp_organization_id
   billing_account = var.gcp_billing_account_id
   deletion_policy = "PREVENT"
 

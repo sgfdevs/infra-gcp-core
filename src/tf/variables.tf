@@ -1,3 +1,8 @@
+variable "gcp_organization_id" {
+  description = "Google Cloud organization ID for managed projects."
+  type        = string
+}
+
 variable "gcp_billing_account_id" {
   description = "Billing account ID to link to the new project, not a credential."
   type        = string
