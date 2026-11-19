@@ -8,11 +8,11 @@ Provisions SGFDEVS shared GCP foundation resources, including projects, APIs, se
 - Owns: GitHub Actions workload identity federation and service-account access.
 
 ## Structure
-- `src/tf/`: OpenTofu resources for projects, APIs, and IAM.
+- `src/tf/`: One file per GCP project, with its APIs and IAM resources. Each resource targets its own project rather than using a provider-wide default.
 - `.github/workflows/`: Validation workflow for OpenTofu changes.
 
 ## Run
-Copy `.envrc.example` to `.envrc` and set the AWS profile and Google Cloud billing account ID. The stack creates `sgfdevs-gcp-core` and trusts manual Play deployments from `main`.
+Copy `.envrc.example` to `.envrc` and set the AWS profile and Google Cloud billing account ID. The stack creates `sgfdevs-method-conf` and trusts manual Play deployments from `main`.
 
 ```bash
 source ./.envrc

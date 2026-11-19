@@ -1,4 +1,5 @@
 locals {
+  method_conf_project_id = "sgfdevs-method-conf"
   method_repository      = "sgfdevs/method_conf_app"
   method_repository_id   = "237699189"
   sgfdevs_owner_id       = "53604170"
@@ -6,26 +7,59 @@ locals {
   method_release_ref     = "refs/heads/main"
 }
 
+resource "google_project" "method_conf" {
+  project_id      = local.method_conf_project_id
+  name            = local.method_conf_project_id
+  billing_account = var.gcp_billing_account_id
+  deletion_policy = "PREVENT"
+
+  labels = {
+    managed-by = "opentofu"
+  }
+}
+
+resource "google_project_service" "method_conf_service_usage" {
+  project            = google_project.method_conf.project_id
+  service            = "serviceusage.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "method_conf_api" {
+  for_each = toset([
+    "cloudresourcemanager.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "sts.googleapis.com",
+    "androidpublisher.googleapis.com",
+  ])
+
+  project            = google_project.method_conf.project_id
+  service            = each.value
+  disable_on_destroy = false
+
+  depends_on = [google_project_service.method_conf_service_usage]
+}
+
 resource "google_service_account" "method_play" {
-  project      = google_project.core.project_id
+  project      = google_project.method_conf.project_id
   account_id   = "method-play-store"
   display_name = "Method Play Store"
   description  = "Method Android release uploads. App permissions are managed in Play Console."
 
-  depends_on = [google_project_service.api["iam.googleapis.com"]]
+  depends_on = [google_project_service.method_conf_api["iam.googleapis.com"]]
 }
 
 resource "google_iam_workload_identity_pool" "method_play" {
-  project                   = google_project.core.project_id
+  project                   = google_project.method_conf.project_id
   workload_identity_pool_id = "method-play"
   display_name              = "Method Play releases"
   description               = "GitHub OIDC for the manual Method Play deployment workflow only."
 
-  depends_on = [google_project_service.api["iam.googleapis.com"]]
+  depends_on = [google_project_service.method_conf_api["iam.googleapis.com"]]
 }
 
 resource "google_iam_workload_identity_pool_provider" "method_play_github" {
-  project                            = google_project.core.project_id
+  project                            = google_project.method_conf.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.method_play.workload_identity_pool_id
   workload_identity_pool_provider_id = "github"
   display_name                       = "Method GitHub releases"
@@ -58,7 +92,7 @@ resource "google_service_account_iam_member" "method_play_github" {
 
   depends_on = [
     google_iam_workload_identity_pool_provider.method_play_github,
-    google_project_service.api["iamcredentials.googleapis.com"],
-    google_project_service.api["sts.googleapis.com"],
+    google_project_service.method_conf_api["iamcredentials.googleapis.com"],
+    google_project_service.method_conf_api["sts.googleapis.com"],
   ]
 }

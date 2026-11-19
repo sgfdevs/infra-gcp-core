@@ -1,11 +1,11 @@
-output "project_id" {
-  description = "GCP project ID."
-  value       = google_project.core.project_id
+output "method_conf_project_id" {
+  description = "GCP project ID for Method Conf."
+  value       = google_project.method_conf.project_id
 }
 
-output "project_number" {
-  description = "Numeric GCP project number used in workload identity resource names."
-  value       = google_project.core.number
+output "method_conf_project_number" {
+  description = "Numeric Method Conf project number used in workload identity resource names."
+  value       = google_project.method_conf.number
 }
 
 output "method_play_service_account_email" {
