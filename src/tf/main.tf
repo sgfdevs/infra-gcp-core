@@ -5,7 +5,7 @@ locals {
 resource "google_project" "core" {
   project_id      = local.project_id
   name            = "SGF Devs GCP Core"
-  billing_account = var.billing_account_id
+  billing_account = var.gcp_billing_account_id
   deletion_policy = "PREVENT"
 
   labels = {
